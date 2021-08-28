@@ -15,7 +15,7 @@ jobs:
       with:
         expo-version: 4.x
     - run: yarn install
-    - run: expo build:web
+    - run: expo build:web --no-pwa -c
     - name: Upload to IPFS
       uses: aquiladev/ipfs-action@v0.1.6-1
       id: upload
