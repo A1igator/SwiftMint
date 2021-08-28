@@ -1,0 +1,27 @@
+name: main
+on: 
+  push:
+    branches:
+      - main
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-node@v1
+      with:
+        node-version: 14.x
+    - uses: expo/expo-github-action@v6
+      with:
+        expo-version: 4.x
+    - run: yarn install
+    - run: expo build:web
+    - name: Upload to IPFS
+      uses: aquiladev/ipfs-action@v0.1.6-1
+      id: upload
+      with:
+        path: ./web-build
+        service: pinata
+        pinataKey: ${{ secrets.PINATA_KEY }}
+        pinataSecret: ${{ secrets.PINATA_SECRET }}
+        pinataPinName: deChess

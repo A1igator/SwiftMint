@@ -1,21 +1,29 @@
-import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { useState } from 'react';
+import {SafeAreaView, useColorScheme} from 'react-native';
+import * as eva from '@eva-design/eva';
+import { ApplicationProvider, IconRegistry } from '@ui-kitten/components';
+import Constants from 'expo-constants';
+import { EvaIconsPack } from '@ui-kitten/eva-icons';
+import CameraComplete from './components/CameraComplete';
+import UploadToImmutable from './components/UploadToImmutable';
+
 
 export default function App() {
+  
+  const [URI, setURI] = useState(null);
+  const [theme, setTheme] = useState(useColorScheme() === 'dark' ? eva.dark : eva.light);
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+      <>
+        <IconRegistry icons={EvaIconsPack} />
+        <ApplicationProvider {...eva} theme={theme}>
+          <SafeAreaView style={{flex: 1, paddingTop: Constants.statusBarHeight}}>
+            {URI ? (
+              <UploadToImmutable URI={URI} setURI={setURI}/>
+            ) : (
+              <CameraComplete theme={theme} setTheme={setTheme} setURI={setURI}/>
+            )}
+          </SafeAreaView>
+        </ApplicationProvider>
+      </>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});

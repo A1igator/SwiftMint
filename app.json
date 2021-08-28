@@ -23,9 +23,11 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "softwareKeyboardLayoutMode": "pan"
     },
     "web": {
+      "build": { "babel": { "include": [ "@ui-kitten/components" ] } },
       "favicon": "./assets/favicon.png"
     }
   }
