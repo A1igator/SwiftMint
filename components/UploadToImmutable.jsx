@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import {Dimensions, Platform, View, Linking} from 'react-native';
+import * as WebBrowser from 'expo-web-browser';
 import { Button, Input, Icon, Text, TopNavigation, TopNavigationAction, Layout, Spinner, Modal, Card } from '@ui-kitten/components';
 import Image from 'react-native-scalable-image';
 import { Link } from '@imtbl/imx-link-sdk';
@@ -28,9 +29,13 @@ export default function UploadToImmutable(props) {
 
   const [walletAddress, setWalletAddress] = useState();
   const [name, setName] = useState();
-  const [isAddress, setIsAddress] = useState(true);
+  const [isError, setIsError] = useState(true);
+  const [error, setError] = useState();
   const [loading, setLoading] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
+  const [buttonText, setButtonText] = useState("Mint on ImmutableX");
+  const [imxURL, setImxURL] = useState();
+  const [disclaimer, setDisclaimer] = useState();
 
   return (
     <>
@@ -46,21 +51,26 @@ export default function UploadToImmutable(props) {
         />
         <Layout style={{flex: 1, flexDirection: 'column', justifyContent: 'space-evenly', alignItems: 'center'}}>
             <Layout>
-                <Input style={{width: 350}} onChangeText={value => setName(value)} placeholder="Name" />
+                <Input disabled={loading || imxURL} style={{width: 350}} onChangeText={value => setName(value)} placeholder="Name" />
             </Layout>
             <Image source={{
                 uri: `data:image/png;base64,${URI}`
             }} width={Platform.OS !== 'web' ? Dimensions.get('window').width*4/5 : Dimensions.get('window').width*2/5}/>
             <Layout>
-                <Input style={{width: 350}} onChangeText={value => setWalletAddress(value)} placeholder="Wallet Address" />
-                {!isAddress && <Text  status='danger'>Invalid Address</Text>}
+                <Input disabled={loading || imxURL} style={{width: 350}} onChangeText={value => setWalletAddress(value)} placeholder="Wallet Address" />
+                {isError && <Text status='danger'>{error}</Text>}
             </Layout>
-            <Button disabled={loading} appearance={loading ? "outline" : "filled"} accessoryLeft={loading ? LoadingIndicator : <Icon name="upload-outline"/>} onPress={async () => {
-                if (walletAddress === '' || walletAddress === undefined || walletAddress === null) {
-                    setIsAddress(false);
+            <Button disabled={loading} appearance={loading ? "outline" : "filled"} accessoryLeft={imxURL ? <Icon name="eye-outline"/> : (loading ? LoadingIndicator : <Icon name="upload-outline"/>)} onPress={async () => {
+                if (imxURL) {
+                    await WebBrowser.openBrowserAsync(imxURL);
                     return;
                 }
-                setIsAddress(true);
+                if (walletAddress === '' || walletAddress === undefined || walletAddress === null) {
+                    setError("Invalid wallet");
+                    setIsError(true);
+                    return;
+                }
+                setIsError(false);
                 setLoading(true);
                 const res = await fetch('https://frictionless.eastus.cloudapp.azure.com/mint', { // Your POST endpoint
                     method: 'POST',
@@ -76,18 +86,25 @@ export default function UploadToImmutable(props) {
                 if (res.status === 400) {
                     const error = await res.text();
                     if (error === "Invalid wallet") {
-                        setIsAddress(false);
+                        setError(error);
+                        setIsError(true);
                     } else if (error === "Wallet not registered") {
                         setModalVisible(true);
                         console.log(error);
                     }
+                } else if (res.status === 524) {
+                    setError("IPFS timed out. Try again in a second")
+                    setIsError(true);
                 } else  if (res.status === 200) {
                     console.log(res.status);
                     const {url} = await res.json();
-                    console.log(url);
+                    setButtonText("View on ImmutableX");
+                    setDisclaimer("(Metadata takes a few seconds to show up)");
+                    setImxURL(url);
                 }
                 setLoading(false);
-            }}>Mint on ImmutableX</Button>
+            }}>{buttonText}</Button>
+            {disclaimer && <Text status='basic'>{disclaimer}</Text>}
             <Modal
                 visible={modalVisible}
                 backdropStyle={{
