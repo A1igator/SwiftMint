@@ -77,6 +77,7 @@ export default function UploadToImmutable(props) {
                     headers: {
                     'Content-Type': 'application/json'
                     },
+                    mode: 'cors',
                     body: JSON.stringify({
                         uri: `data:image/png;base64,${URI}`,
                         walletAddress,
