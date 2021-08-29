@@ -1,6 +1,7 @@
 import React from 'react';
 import { Platform } from 'react-native';
 import { Button, Icon, Text, Layout} from '@ui-kitten/components';
+import * as Device from 'expo-device';
 import * as ImagePicker from 'expo-image-picker';
 import * as eva from '@eva-design/eva';
 import Constants from 'expo-constants';
@@ -13,7 +14,7 @@ export default function CameraComplete(props) {
     <Layout style={{flex: 1, flexDirection: 'column', justifyContent: 'space-evenly', alignItems: 'center'}}>
       <Text style={{textAlign: 'center'}} category="h1">Mint NFTs for free on Ethereum</Text>
       <Layout style={{width: '100%', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-evenly'}}>
-        <Button accessoryLeft={<Icon name="camera-outline"/>}  onPress={async () => {
+        {(Device.osName !== 'Windows' && Device.osName !== 'Linux' && Device.osName !== 'Mac') && <Button accessoryLeft={<Icon name="camera-outline"/>}  onPress={async () => {
           if (Platform.OS !== 'web') {
             await ImagePicker.requestCameraPermissionsAsync();
           }
@@ -22,7 +23,7 @@ export default function CameraComplete(props) {
             base64: true
           });
           setURI(image.base64);
-        }}>Take a picture</Button>
+        }}>Take a picture</Button>}
         <Button accessoryLeft={<Icon name="file-add-outline"/>} onPress={async () => {
           const image = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
