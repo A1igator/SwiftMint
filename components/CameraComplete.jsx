@@ -14,8 +14,8 @@ export default function CameraComplete(props) {
     <Layout style={{flex: 1, flexDirection: 'column', justifyContent: 'space-evenly', alignItems: 'center'}}>
       <Text style={{textAlign: 'center'}} category="h1">Mint NFTs for free on Ethereum</Text>
       <Layout style={{width: '100%', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-evenly'}}>
-        {(Device.osName !== 'Windows' && Device.osName !== 'Linux' && Device.osName !== 'Mac') && <Button accessoryLeft={<Icon name="camera-outline"/>}  onPress={async () => {
-          if (Platform.OS !== 'web' && typeof window.ethereum !== 'undefined') {
+        {(Device.osName !== 'Windows' && Device.osName !== 'Linux' && Device.osName !== 'Mac' && typeof window.ethereum === 'undefined') && <Button accessoryLeft={<Icon name="camera-outline"/>}  onPress={async () => {
+          if (Platform.OS !== 'web') {
             await ImagePicker.requestCameraPermissionsAsync();
           }
           const image = await ImagePicker.launchCameraAsync({
