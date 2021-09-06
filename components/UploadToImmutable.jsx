@@ -12,7 +12,7 @@ const LoadingIndicator = (props) => (
   );
 
 const setupWallet = async () => {
-  const link = new Link('https://link.uat.x.immutable.com');
+  const link = new Link('https://link.x.immutable.com');
 
   // Register user, you can persist address to local storage etc.
   try {
@@ -63,6 +63,11 @@ export default function UploadToImmutable(props) {
             <Button disabled={loading} appearance={loading ? "outline" : "filled"} accessoryLeft={imxURL ? <Icon name="eye-outline"/> : (loading ? LoadingIndicator : <Icon name="upload-outline"/>)} onPress={async () => {
                 if (imxURL) {
                     await WebBrowser.openBrowserAsync(imxURL);
+                    return;
+                }
+                if (name === '' || name === undefined || name === null) {
+                    setError("Name can not be empty");
+                    setIsError(true);
                     return;
                 }
                 if (walletAddress === '' || walletAddress === undefined || walletAddress === null) {

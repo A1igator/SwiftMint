@@ -6,7 +6,7 @@ import * as ImagePicker from 'expo-image-picker';
 import * as eva from '@eva-design/eva';
 import Constants from 'expo-constants';
 
-export default function CameraComplete(props) {
+export default function ImagePickerView(props) {
   const {setURI, setTheme, theme} = props;
 
   return (

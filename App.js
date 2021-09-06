@@ -4,8 +4,9 @@ import * as eva from '@eva-design/eva';
 import { ApplicationProvider, IconRegistry } from '@ui-kitten/components';
 import Constants from 'expo-constants';
 import { EvaIconsPack } from '@ui-kitten/eva-icons';
-import CameraComplete from './components/CameraComplete';
+import ImagePickerView from './components/ImagePickerView';
 import UploadToImmutable from './components/UploadToImmutable';
+// import CameraView from './components/CameraView';
 
 
 export default function App() {
@@ -20,7 +21,8 @@ export default function App() {
             {URI ? (
               <UploadToImmutable URI={URI} setURI={setURI}/>
             ) : (
-              <CameraComplete theme={theme} setTheme={setTheme} setURI={setURI}/>
+              <ImagePickerView theme={theme} setTheme={setTheme} setURI={setURI}/>
+              // <CameraView/>
             )}
           </SafeAreaView>
         </ApplicationProvider>
