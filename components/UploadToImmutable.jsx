@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import {Dimensions, Platform, View, Linking} from 'react-native';
+import {Dimensions, Platform, View, Linking, } from 'react-native';
+import * as Device from 'expo-device';
 import * as WebBrowser from 'expo-web-browser';
 import { Button, Input, Icon, Text, TopNavigation, TopNavigationAction, Layout, Spinner, Modal, Card } from '@ui-kitten/components';
 import Image from 'react-native-scalable-image';
@@ -117,9 +118,9 @@ export default function UploadToImmutable(props) {
                     backgroundColor: 'rgba(0, 0, 0, 0.5)',
                 }}>
                     <Card disabled={true}>
-                        <Text style={{marginBottom: 10, textAlign: 'center'}}>{"Your address is not registered on Immutable X.\nPlease register it using metamask.\n\nThis is only needed once."}</Text>
+                        <Text style={{marginBottom: 10, textAlign: 'center'}}>{"Your address is not registered on Immutable X.\nPlease register it using metamask extension on desktop.\n\nThis is only needed once."}</Text>
                         <Button onPress={async () => {
-                            if (Platform.OS === 'web') {
+                            if (Platform.OS === 'web' && (Device.osName === 'Windows' || Device.osName === 'Linux' || Device.osName === 'Mac')) {
                                 if (await setupWallet()) {
                                     setModalVisible(false);
                                 }
@@ -128,7 +129,7 @@ export default function UploadToImmutable(props) {
                                 setModalVisible(false);
                             }
                         }}>
-                            Register
+                            Registeration Link
                         </Button>
                     </Card>
             </Modal>
