@@ -3,11 +3,9 @@ import { Platform } from 'react-native';
 import { Button, Icon, Text, Layout} from '@ui-kitten/components';
 import * as Device from 'expo-device';
 import * as ImagePicker from 'expo-image-picker';
-import * as eva from '@eva-design/eva';
-import Constants from 'expo-constants';
 
 export default function ImagePickerView(props) {
-  const {setURI, setTheme, theme} = props;
+  const {setURI} = props;
 
   return (
     <>
@@ -33,14 +31,6 @@ export default function ImagePickerView(props) {
         }}>Select from library</Button>
       </Layout>
     </Layout>
-    <Button onPress={() => {
-      if (theme === eva.dark) {
-        setTheme(eva.light);
-      } else {
-        setTheme(eva.dark);
-      }
-    }} style={{zIndex: 10,height: 50, aspectRatio: 1, marginTop: Constants.statusBarHeight + 10, position: 'absolute', right: 10}} 
-    accessoryLeft={<Icon name={theme === eva.dark ? 'moon-outline' : 'sun-outline'}/>}></Button>
     </>
   );
 }
