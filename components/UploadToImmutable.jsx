@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import {Dimensions, Platform, View, Linking, } from 'react-native';
+import {Dimensions, Platform, View, Linking } from 'react-native';
 import * as Device from 'expo-device';
 import * as WebBrowser from 'expo-web-browser';
 import { Button, Input, Icon, Text, TopNavigation, TopNavigationAction, Layout, Spinner, Modal, Card } from '@ui-kitten/components';
