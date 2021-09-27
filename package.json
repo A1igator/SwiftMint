@@ -21,6 +21,7 @@
     "expo-constants": "~11.0.1",
     "expo-device": "~3.3.0",
     "expo-image-picker": "~10.2.2",
+    "expo-sharing": "~9.2.1",
     "expo-status-bar": "~1.0.4",
     "expo-web-browser": "~9.2.0",
     "js-base64": "^3.7.2",
