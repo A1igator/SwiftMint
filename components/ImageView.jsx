@@ -6,7 +6,7 @@ import Image from 'react-native-scalable-image';
 import {Layout, Input, Button, Icon, Modal, Text} from '@ui-kitten/components';
 
 export default function ImageView(props) {
-    const {elem: { item, index }, items, setItems} = props;
+    const {elem: { item, index }, items, setItems, itemNameError} = props;
     const [imageModalVisible, setImageModalVisible] = useState(false);
 
 
@@ -18,9 +18,9 @@ export default function ImageView(props) {
                         if (index > 0) {
                             item.uri = 'selectItem';
                             items[index].uri = 'selectItem';
-                            setItems([...items, {uri: '+', name: ""}]);
+                            setItems([...items, {uri: '+', name: "", description: ""}]);
                         } else {
-                            setItems([{uri: 'selectItem', name: ""}, ...items]);
+                            setItems([{uri: 'selectItem', name: "", description: ""}, ...items]);
                         }
                     }}>+
                 </Button>
@@ -35,11 +35,15 @@ export default function ImageView(props) {
                     }
                 } placeholder="Item Name" />
             </Layout>
-            {item.uri === 'selectItem' ? (<>        
+            {item.uri !== '+' && <Button style={{zIndex: 100, position: 'absolute', top: 0, right: -20, width: 10, heigh: 10}} onPress={() => {
+                items.splice(index, 1);
+                setItems([...items]);
+             }}>X</Button>}
+            {item.uri === 'selectItem' ? (<>  
                 <View style={{width: '100%', flexDirection: 'column', alignItems: 'center', justifyContent: 'space-evenly', flex: 2}}>
                 {(Device.osName !== 'Windows' && Device.osName !== 'Linux' && Device.osName !== 'Mac' && typeof window.ethereum === 'undefined') && <Button accessoryLeft={<Icon name="camera-outline"/>}  onPress={async () => {
                     if (Platform.OS !== 'web') {
-                    await ImagePicker.requestCameraPermissionsAsync();
+                        await ImagePicker.requestCameraPermissionsAsync();
                     }
                     const image = await ImagePicker.launchCameraAsync({
                     mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -76,7 +80,17 @@ export default function ImageView(props) {
                 </Modal>
                 </>
             )}
+            <Layout>
+                <Input multiline={true} style={{width: Dimensions.get('window').width - 100 > 350 ? 350 : Dimensions.get('window').width - 100}} onChangeText={value => 
+                    {
+                        item.description = value;
+                        items[index].description = value;
+                        setItems([...items]);
+                    }
+                } placeholder="Description (optional)" />
+            </Layout>
             </>}
+            
           </View>
           {item.uri !== '+' && index === 0 && <Text style={{paddingTop: 10}}>Scroll to add more ⟶</Text>}
       </Layout>
