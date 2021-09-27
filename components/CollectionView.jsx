@@ -4,10 +4,19 @@ import * as Device from 'expo-device';
 import { Button, Icon, Input, Layout, Text, Modal, Card, Spinner } from '@ui-kitten/components';
 import base64 from 'react-native-base64'
 import Image from 'react-native-scalable-image';
+import * as Sharing from 'expo-sharing';
 
 export default function CollectionView({route}) {
     const [itemsMetadatas, setItemsMetadatas] = useState();
     const [error, setError] = useState();
+    const [shareText, setShareText] = useState('Share');
+    if (shareText !== 'Copy link') {
+        Sharing.isAvailableAsync().then(res => {
+            if (!res) {
+                setShareText('Copy link');
+            }
+        });
+    }
     const {params} = route;
     const base64Decoded = base64.decode(decodeURIComponent(params.id));
     const itemsMinted = base64Decoded.split(' ');
@@ -48,6 +57,15 @@ export default function CollectionView({route}) {
                         <Image height={Dimensions.get('window').height/3} source={{uri: metadata.image}}/>
                     </Card>)}
                 </ScrollView>
+                <Layout>
+                    <Button onPress={async () => {
+                        if (await Sharing.isAvailableAsync()) {
+                            await Sharing.shareAsync(window.location.href);
+                        } else {
+                            await navigator.clipboard.writeText(window.location.href);
+                        }
+                    }}>{shareText}</Button>
+                </Layout>
             </View>}
             {/* </Layout> */}
         </Layout>
