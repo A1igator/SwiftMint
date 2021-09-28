@@ -1,14 +1,12 @@
 import React, { useState } from 'react';
 import {Linking, Dimensions, View, ScrollView} from 'react-native';
-import * as Device from 'expo-device';
 import { Button, Icon, Input, Layout, Text, Modal, Card, Spinner } from '@ui-kitten/components';
 import base64 from 'react-native-base64'
 import Image from 'react-native-scalable-image';
 import * as Sharing from 'expo-sharing';
 
-export default function CollectionView({route}) {
+export default function CollectionView({match}) {
     const [itemsMetadatas, setItemsMetadatas] = useState();
-    const [error, setError] = useState();
     const [shareText, setShareText] = useState('Share');
     if (shareText !== 'Copy link') {
         Sharing.isAvailableAsync().then(res => {
@@ -17,12 +15,12 @@ export default function CollectionView({route}) {
             }
         });
     }
-    const {params} = route;
+    const {params} = match;
     const base64Decoded = base64.decode(decodeURIComponent(params.id));
     const itemsMinted = base64Decoded.split(' ');
     itemsMinted.pop();
-    if (itemsMinted.length === 0 && !error) {
-        setError('Collection doesn\'t exist')
+    if (itemsMinted.length === 0) {
+        return <Layout style={{flex: 1, justifyContent: 'flex-start', alignItems: 'center'}}><Text category='h1' style={{paddingTop: 20}}>Collection doesn't exist</Text></Layout>;
     }
     const getMetadatas = async () => {
         setItemsMetadatas(await Promise.all(itemsMinted.map(async item => {
@@ -45,9 +43,7 @@ export default function CollectionView({route}) {
     
     return (
         <Layout style={{flex: 1, justifyContent: 'flex-start', alignItems: 'center'}}>
-            {error && <Text category='h1' style={{paddingTop: 20}}>{error}</Text>}
             {!itemsMetadatas && <Spinner style={{paddingTop: 20}} size='giant'/>}
-            {/* <Layout style={{flex: 1, flexDirection: 'row', flexWrap: 'wrap', alignItems: 'flex-start', justifyContent: 'center'}}> */}
             {itemsMetadatas && <View style={{alignSelf: 'stretch'}}>
                 <ScrollView horizontal> 
                     {itemsMetadatas.map(({id, metadata}) => <Card  onPress={() => {
@@ -67,7 +63,6 @@ export default function CollectionView({route}) {
                     }}>{shareText}</Button>
                 </Layout>
             </View>}
-            {/* </Layout> */}
         </Layout>
     )
 }
