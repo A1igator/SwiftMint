@@ -22,7 +22,7 @@ const link = new Link('https://link.x.immutable.com');
   return true;
 }
 
-export default function UploadView({ navigation }) {
+export default function UploadView({ history }) {
   // const [collectionName, setCollectionName] = useState();
   const [walletAddress, setWalletAddress] = useState();
   const [items, setItems] = useState([{uri: "+", name: "", description: ""}]);
@@ -91,9 +91,7 @@ export default function UploadView({ navigation }) {
                     results.forEach(result => {
                       resultsText += result.token_id + ' ';
                     });
-                    navigation.navigate('Collections', {
-                      id: base64.encode(resultsText),
-                    });
+                    history.push('/collections/' + base64.encode(resultsText));
                 }
                 setLoading(false);
             }}>{buttonText}</Button>
