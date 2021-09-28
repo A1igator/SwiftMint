@@ -55,7 +55,7 @@ export default function App() {
           <SafeAreaView style={{flex: 1, paddingTop: Constants.statusBarHeight}}>
             <Router>
               <Route path='/collections/:id' component={CollectionView}/>
-              <Route path='/mint' component={UploadView}/>
+              <Route path='/' component={UploadView}/>
               <Layout style={{flex: .1, flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
               <Button style={{width: 50}} onPress={() => {
                 Linking.openURL("https://discord.gg/xFRt2rpyq4");
