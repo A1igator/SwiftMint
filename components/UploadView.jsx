@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Dimensions, View, Linking } from 'react-native';
+import { Dimensions, View, Linking, Platform } from 'react-native';
 import { Button, Icon, Input, Layout, Text, List, Modal, Card, Spinner } from '@ui-kitten/components';
 import base64 from 'react-native-base64'
 import ImageView from './ImageView';
@@ -11,7 +11,7 @@ const LoadingIndicator = (props) => (
 );
 
 const setupWallet = async () => {
-const link = new Link('https://link.x.immutable.com');
+  const link = new Link('https://link.x.immutable.com');
 
   // Register user, you can persist address to local storage etc.
   try {
