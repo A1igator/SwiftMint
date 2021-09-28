@@ -5,6 +5,8 @@ import * as ImagePicker from 'expo-image-picker';
 import Image from 'react-native-scalable-image';
 import {Layout, Input, Button, Icon, Modal, Text} from '@ui-kitten/components';
 
+const imgHeight = Dimensions.get('window').height/3 - 100;
+
 export default function ImageView(props) {
     const {elem: { item, index }, items, setItems, itemNameError} = props;
     const [imageModalVisible, setImageModalVisible] = useState(false);
@@ -70,7 +72,7 @@ export default function ImageView(props) {
                     setImageModalVisible(true);
                 }} source={{
                     uri: `data:image/png;base64,${item.uri}`
-                }} height={Dimensions.get('window').height/3 - 100}/>
+                }} height={imgHeight}/>
                 <Modal visible={imageModalVisible}>
                     <Image onPress={() => {
                         setImageModalVisible(false);
