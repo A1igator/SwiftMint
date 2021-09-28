@@ -3,6 +3,7 @@ import { Dimensions, View, Linking, Platform } from 'react-native';
 import { Button, Icon, Input, Layout, Text, List, Modal, Card, Spinner } from '@ui-kitten/components';
 import base64 from 'react-native-base64'
 import ImageView from './ImageView';
+import * as Device from 'expo-device';
 
 const LoadingIndicator = (props) => (
   <View style={props.style}>
