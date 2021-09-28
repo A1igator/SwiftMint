@@ -22,6 +22,8 @@ const link = new Link('https://link.x.immutable.com');
   return true;
 }
 
+const boxHeight = Dimensions.get('window').height/2.5;
+
 export default function UploadView({ history }) {
   // const [collectionName, setCollectionName] = useState();
   const [walletAddress, setWalletAddress] = useState();
@@ -39,7 +41,7 @@ export default function UploadView({ history }) {
         {/* <Layout>
           <Input style={{width: Dimensions.get('window').width - 50 > 350 ? 350 : Dimensions.get('window').width - 50}} onChangeText={value => setCollectionName(value)} placeholder="Collection Name (optional)" />
         </Layout> */}
-        <View style={{height: Dimensions.get('window').height/2.5, alignSelf: 'stretch'}}>
+        <View style={{height: boxHeight, alignSelf: 'stretch'}}>
           <List showsHorizontalScrollIndicator={false} horizontal data={items} renderItem={(elem) => <ImageView elem={elem} items={items} setItems={setItems} />}/>
         </View>
         <Layout>
