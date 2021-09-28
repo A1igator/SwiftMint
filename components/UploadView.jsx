@@ -4,6 +4,7 @@ import { Button, Icon, Input, Layout, Text, List, Modal, Card, Spinner } from '@
 import base64 from 'react-native-base64'
 import ImageView from './ImageView';
 import * as Device from 'expo-device';
+import { Link } from '@imtbl/imx-link-sdk';
 
 const LoadingIndicator = (props) => (
   <View style={props.style}>
