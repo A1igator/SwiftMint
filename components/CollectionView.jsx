@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import {
-  Linking, Dimensions, View, ScrollView,
+  Linking, Dimensions, View, ScrollView, StyleSheet,
 } from 'react-native';
 import {
   Button, Layout, Text, Card, Spinner,
@@ -8,6 +8,21 @@ import {
 import base64 from 'react-native-base64';
 import Image from 'react-native-scalable-image';
 import * as Sharing from 'expo-sharing';
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1, justifyContent: 'flex-start', alignItems: 'center',
+  },
+  topSpace: {
+    paddingTop: 20,
+  },
+  listContainer: {
+    alignSelf: 'stretch',
+  },
+  itemName: {
+    textAlign: 'center', paddingBottom: 10,
+  },
+});
 
 export default function CollectionView({ match: { params: { id } } }) {
   const [itemsMetadatas, setItemsMetadatas] = useState();
@@ -23,7 +38,7 @@ export default function CollectionView({ match: { params: { id } } }) {
   const itemsMinted = base64Decoded.split(' ');
   itemsMinted.pop();
   if (itemsMinted.length === 0) {
-    return <Layout style={{ flex: 1, justifyContent: 'flex-start', alignItems: 'center' }}><Text category="h1" style={{ paddingTop: 20 }}>Collection doesn&apos;t exist</Text></Layout>;
+    return <Layout style={styles.container}><Text category="h1" style={styles.topSpace}>Collection doesn&apos;t exist</Text></Layout>;
   }
   const getMetadatas = async () => {
     setItemsMetadatas(await Promise.all(itemsMinted.map(async (item) => {
@@ -44,10 +59,10 @@ export default function CollectionView({ match: { params: { id } } }) {
   }
 
   return (
-    <Layout style={{ flex: 1, justifyContent: 'flex-start', alignItems: 'center' }}>
-      {!itemsMetadatas && <Spinner style={{ paddingTop: 20 }} size="giant" />}
+    <Layout style={styles.container}>
+      {!itemsMetadatas && <Spinner style={styles.topSpace} size="giant" />}
       {itemsMetadatas && (
-      <View style={{ alignSelf: 'stretch' }}>
+      <View style={styles.listContainer}>
         <ScrollView horizontal>
           {itemsMetadatas.map(({ item, metadata }) => (
             <Card
@@ -56,7 +71,7 @@ export default function CollectionView({ match: { params: { id } } }) {
               }}
               key={item}
             >
-              <Text style={{ textAlign: 'center', paddingBottom: 10 }}>{metadata.name}</Text>
+              <Text style={styles.itemName}>{metadata.name}</Text>
               <Image height={Dimensions.get('window').height / 3} source={{ uri: metadata.image }} />
             </Card>
           ))}

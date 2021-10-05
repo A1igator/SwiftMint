@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import {
-  Dimensions, View, Linking, Platform,
+  Dimensions, View, Linking, Platform, StyleSheet,
 } from 'react-native';
 import {
   Button, Icon, Input, Layout, Text, List, Modal, Card, Spinner,
@@ -9,6 +9,29 @@ import base64 from 'react-native-base64';
 import * as Device from 'expo-device';
 import { Link } from '@imtbl/imx-sdk';
 import ImageView from './ImageView';
+
+const boxHeight = Dimensions.get('window').height / 2.5;
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1, flexDirection: 'column', justifyContent: 'space-evenly', alignItems: 'center',
+  },
+  title: {
+    textAlign: 'center', padding: 25,
+  },
+  listContainer: {
+    height: boxHeight, alignSelf: 'stretch',
+  },
+  walletAddressInput: {
+    width: Dimensions.get('window').width - 50 > 350 ? 350 : Dimensions.get('window').width - 50,
+  },
+  popText: {
+    marginBottom: 10, textAlign: 'center',
+  },
+  modalBackdrop: {
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+});
 
 const LoadingIndicator = ({ style }) => (
   <View style={style}>
@@ -19,7 +42,7 @@ const LoadingIndicator = ({ style }) => (
 const setupWallet = async () => {
   const link = new Link('https://link.x.immutable.com');
 
-  // Register user, you can persist address to local storage etc.
+  // Register user
   try {
     await link.setup({});
   } catch (err) {
@@ -28,10 +51,7 @@ const setupWallet = async () => {
   return true;
 };
 
-const boxHeight = Dimensions.get('window').height / 2.5;
-
 export default function UploadView({ history }) {
-  // const [collectionName, setCollectionName] = useState();
   const [walletAddress, setWalletAddress] = useState();
   const [items, setItems] = useState([{ uri: '+', name: '', description: '' }]);
   const [error, setError] = useState();
@@ -40,12 +60,9 @@ export default function UploadView({ history }) {
 
   return (
     <>
-      <Layout style={{
-        flex: 1, flexDirection: 'column', justifyContent: 'space-evenly', alignItems: 'center',
-      }}
-      >
-        <Text style={{ textAlign: 'center', padding: 25 }} category="h1">Mint NFTs for free on Ethereum</Text>
-        <View style={{ height: boxHeight, alignSelf: 'stretch' }}>
+      <Layout style={styles.container}>
+        <Text style={styles.title} category="h1">Mint NFTs for free on Ethereum</Text>
+        <View style={styles.listContainer}>
           <List
             showsHorizontalScrollIndicator={false}
             horizontal
@@ -57,7 +74,7 @@ export default function UploadView({ history }) {
         </View>
         <Layout>
           <Input
-            style={{ width: Dimensions.get('window').width - 50 > 350 ? 350 : Dimensions.get('window').width - 50 }}
+            style={styles.walletAddressInput}
             onChangeText={(value) => setWalletAddress(value)}
             placeholder="Wallet Address"
           />
@@ -94,7 +111,7 @@ export default function UploadView({ history }) {
                 walletAddress,
                 items: itemsCopy,
                 // collection: collectionName
-              }), // This is your file object
+              }),
             });
             if (res.status === 400) {
               const err = await res.text();
@@ -116,17 +133,15 @@ export default function UploadView({ history }) {
             setLoading(false);
           }}
         >
-          Mint on ImmutableX
+          Mint on Immutable X
         </Button>
       </Layout>
       <Modal
         visible={modalVisible}
-        backdropStyle={{
-          backgroundColor: 'rgba(0, 0, 0, 0.5)',
-        }}
+        backdropStyle={styles.modalBackdrop}
       >
         <Card disabled>
-          <Text style={{ marginBottom: 10, textAlign: 'center' }}>{'Your address is not registered on Immutable X.\nPlease register it using metamask extension on desktop.\n\nThis is only needed once.'}</Text>
+          <Text style={styles.popText}>{'Your address is not registered on Immutable X.\nPlease register it using metamask extension on desktop.\n\nThis is only needed once.'}</Text>
           <Button onPress={async () => {
             if (Platform.OS === 'web' && (Device.osName === 'Windows' || Device.osName === 'Linux' || Device.osName === 'Mac')) {
               if (await setupWallet()) {

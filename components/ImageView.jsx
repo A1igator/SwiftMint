@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
-import { Platform, Dimensions, View } from 'react-native';
+import {
+  Platform, Dimensions, View, StyleSheet,
+} from 'react-native';
 import * as Device from 'expo-device';
 import * as ImagePicker from 'expo-image-picker';
 import Image from 'react-native-scalable-image';
@@ -9,6 +11,33 @@ import {
 
 const imgHeight = Dimensions.get('window').height / 3 - 100;
 
+const styles = StyleSheet.create({
+  container: {
+    width: Dimensions.get('window').width, flex: 1, flexDirection: 'column', justifyContent: 'space-evenly', alignItems: 'center',
+  },
+  cardBackground: {
+    backgroundColor: 'grey', flex: 1, flexDirection: 'column', justifyContent: 'space-around', alignItems: 'center', padding: 25, marginTop: 20,
+  },
+  plusButtonContainer: {
+    flex: 1, flexDirection: 'column', justifyContent: 'space-around', alignItems: 'center',
+  },
+  plusButton: {
+    width: 50,
+  },
+  itemElement: {
+    width: Dimensions.get('window').width - 100 > 350 ? 350 : Dimensions.get('window').width - 100,
+  },
+  closeButton: {
+    zIndex: 99999, position: 'absolute', top: -20, right: -20, width: 10, heigh: 10,
+  },
+  selectImageContainer: {
+    width: '100%', flexDirection: 'column', alignItems: 'center', justifyContent: 'space-evenly', flex: 2,
+  },
+  scrollForMore: {
+    paddingTop: 10,
+  },
+});
+
 export default function ImageView(props) {
   const {
     elem: { item, index }, items, setItems,
@@ -16,21 +45,12 @@ export default function ImageView(props) {
   const [imageModalVisible, setImageModalVisible] = useState(false);
 
   return (
-    <Layout style={{
-      width: Dimensions.get('window').width, flex: 1, flexDirection: 'column', justifyContent: 'space-evenly', alignItems: 'center',
-    }}
-    >
-      <View style={{
-        backgroundColor: 'grey', flex: 1, flexDirection: 'column', justifyContent: 'space-around', alignItems: 'center', padding: 25,
-      }}
-      >
+    <Layout style={styles.container}>
+      <View style={styles.cardBackground}>
         {item.uri === '+' ? (
-          <View style={{
-            width: Dimensions.get('window').width - 100 > 350 ? 350 : Dimensions.get('window').width - 100, flex: 1, flexDirection: 'column', justifyContent: 'space-around', alignItems: 'center',
-          }}
-          >
+          <View style={[styles.plusButtonContainer, styles.itemElement]}>
             <Button
-              style={{ width: 50 }}
+              style={styles.plusButton}
               onPress={() => {
                 if (index > 0) {
                   item.uri = 'selectItem';
@@ -48,7 +68,7 @@ export default function ImageView(props) {
           <>
             <Layout>
               <Input
-                style={{ width: Dimensions.get('window').width - 100 > 350 ? 350 : Dimensions.get('window').width - 100 }}
+                style={styles.itemElement}
                 onChangeText={(value) => {
                   item.name = value;
                   items[index].name = value;
@@ -59,9 +79,7 @@ export default function ImageView(props) {
             </Layout>
             {item.uri !== '+' && (
             <Button
-              style={{
-                zIndex: 100, position: 'absolute', top: 0, right: -20, width: 10, heigh: 10,
-              }}
+              style={styles.closeButton}
               onPress={() => {
                 items.splice(index, 1);
                 setItems([...items]);
@@ -72,10 +90,7 @@ export default function ImageView(props) {
             )}
             {item.uri === 'selectItem' ? (
               <>
-                <View style={{
-                  width: '100%', flexDirection: 'column', alignItems: 'center', justifyContent: 'space-evenly', flex: 2,
-                }}
-                >
+                <View style={styles.selectImageContainer}>
                   {(Device.osName !== 'Windows' && Device.osName !== 'Linux' && Device.osName !== 'Mac' && typeof window.ethereum === 'undefined') && (
                   <Button
                     accessoryLeft={<Icon name="camera-outline" />}
@@ -138,7 +153,7 @@ export default function ImageView(props) {
             <Layout>
               <Input
                 multiline
-                style={{ width: Dimensions.get('window').width - 100 > 350 ? 350 : Dimensions.get('window').width - 100 }}
+                style={styles.itemElement}
                 onChangeText={(value) => {
                   item.description = value;
                   items[index].description = value;
@@ -151,7 +166,7 @@ export default function ImageView(props) {
         )}
 
       </View>
-      {item.uri !== '+' && index === 0 && <Text style={{ paddingTop: 10 }}>Scroll to add more ⟶</Text>}
+      {item.uri !== '+' && index === 0 && <Text style={styles.scrollForMore}>Scroll to add more ⟶</Text>}
     </Layout>
   );
 }

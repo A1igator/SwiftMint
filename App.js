@@ -1,7 +1,9 @@
 /* eslint react/jsx-filename-extension: 0 */
 
 import React, { useState } from 'react';
-import { SafeAreaView, useColorScheme, Linking } from 'react-native';
+import {
+  SafeAreaView, useColorScheme, Linking, StyleSheet,
+} from 'react-native';
 import * as eva from '@eva-design/eva';
 import {
   ApplicationProvider, IconRegistry, Button, Icon, Layout,
@@ -17,31 +19,44 @@ import {
 import UploadView from './components/UploadView';
 import CollectionView from './components/CollectionView';
 
+const styles = StyleSheet.create({
+  container: {
+    flex: 1, paddingTop: Constants.statusBarHeight,
+  },
+  bottomBarContainer: {
+    flex: 0.1, flexDirection: 'row', justifyContent: 'center', alignItems: 'center',
+  },
+  linkButton: {
+    width: 50,
+    margin: 5,
+  },
+  themeButton: {
+    zIndex: 10, height: 50, aspectRatio: 1, marginTop: Constants.statusBarHeight + 10, position: 'absolute', right: 10,
+  },
+});
+
 export default function App() {
   const [theme, setTheme] = useState(useColorScheme() === 'dark' ? eva.dark : eva.light);
   return (
     <>
       <IconRegistry icons={EvaIconsPack} />
       <ApplicationProvider {...eva} theme={theme}>
-        <SafeAreaView style={{ flex: 1, paddingTop: Constants.statusBarHeight }}>
+        <SafeAreaView style={styles.container}>
           <Router>
             <Switch>
               <Route path="/collections/:id" component={CollectionView} />
               <Route path="/" component={UploadView} />
             </Switch>
-            <Layout style={{
-              flex: 0.1, flexDirection: 'row', justifyContent: 'center', alignItems: 'center',
-            }}
-            >
+            <Layout style={styles.bottomBarContainer}>
               <Button
-                style={{ width: 50 }}
+                style={styles.linkButton}
                 onPress={() => {
                   Linking.openURL('https://discord.gg/xFRt2rpyq4');
                 }}
                 accessoryLeft={<Fontisto size={24} color="white" name="discord" />}
               />
               <Button
-                style={{ width: 50, marginLeft: 10 }}
+                style={styles.linkButton}
                 onPress={() => {
                   Linking.openURL('https://twitter.com/swift_mint');
                 }}
@@ -56,9 +71,7 @@ export default function App() {
                   setTheme(eva.dark);
                 }
               }}
-              style={{
-                zIndex: 10, height: 50, aspectRatio: 1, marginTop: Constants.statusBarHeight + 10, position: 'absolute', right: 10,
-              }}
+              style={styles.themeButton}
               accessoryLeft={<Icon name={theme === eva.dark ? 'moon-outline' : 'sun-outline'} />}
             />
           </Router>
